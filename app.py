@@ -7,7 +7,7 @@ app = Flask(__name__)
 CORS(app)
 
 firebase_config = {
-    "apiKey": "AIzaSyAUeSwvXpjTnJHXE2gFoFvp3Qx1BSn__sM",
+    "apiKey": "Enter Your API KEY",
     "authDomain": "carpooling-d3b79.firebaseapp.com",
     "projectId": "carpooling-d3b79",
     "storageBucket": "carpooling-d3b79.firebasestorage.app",
