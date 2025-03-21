@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Booked Rides</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .ride { border-bottom: 1px solid #ddd; padding: 10px; text-align: left; }
+        .unbook-btn { width: auto; margin-top: 10px; }
+
+        /* Heading */
+        h2 {
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        /* Back Button */
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s ease-in-out;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        /* Ride List Styling */
+        .ride {
+            background: #f9f9f9;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 5px solid #007bff;
+            border-radius: 8px;
+            text-align: left;
+            box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .ride p {
+            margin: 5px 0;
+            font-size: 16px;
+            color: #555;
+        }
+
+        /* Unbook Button */
+        .unbook-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s ease-in-out;
+        }
+
+        .unbook-btn:hover {
+            background: #c0392b;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                width: 90%;
+                padding: 20px;
+            }
+
+            .ride {
+                padding: 10px;
+            }
+        }
+
+    </style>
+</head>
+<body style="height: 1000px;background: url(/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvdjk2MC1uaW5nLTMwLmpwZw.webp) no-repeat center center/cover;">
+
+    <header>
+        <a href="landing.html" style="text-decoration: none;">
+            <div class="logo">🚗</div>
+        </a>
+        <div class="profile-section">
+            <img src="dragon-ball-goku-sparks-gif-cover-desktop-wallpaper.gif" alt="Profile" class="profile-icon">
+            <button class="btn btn-secondary" onclick="logout()">Logout</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2>Booked Rides</h2>
+        <div id="bookedRidesList"></div>
+        
+        <button onclick="window.location.href='find_ride.html'">Back to Find Rides</button>
+    </div>
+
+
+    <script>
+        function loadBookedRides() {
+            let allRidesData = JSON.parse(localStorage.getItem("allRides")) || {};
+            let bookings = JSON.parse(localStorage.getItem("userBookings")) || {};
+            let bookedRides = [];
+
+            // Convert all rides to array and filter booked ones
+            Object.values(allRidesData).forEach(userRides => {
+                bookedRides = bookedRides.concat(userRides.filter(ride => bookings[getRideId(ride)]));
+            });
+
+            displayBookedRides(bookedRides);
+        }
+
+        function displayBookedRides(bookedRides) {
+            const bookedRidesList = document.getElementById("bookedRidesList");
+            bookedRidesList.innerHTML = "";
+
+            if (bookedRides.length === 0) {
+                bookedRidesList.innerHTML = "<p>No booked rides found.</p>";
+                return;
+            }
+
+            bookedRides.forEach((ride, index) => {
+                const rideId = getRideId(ride);
+                
+                const rideElement = document.createElement("div");
+                rideElement.className = "ride";
+
+                rideElement.innerHTML = `
+                    <p><strong>Rider:</strong> ${ride.riderName}</p>
+                    <p><strong>Pickup:</strong> ${ride.pickup}</p>
+                    <p><strong>Destination:</strong> ${ride.destination}</p>
+                    <p><strong>Date:</strong> ${ride.date}</p>
+                    <p><strong>Time:</strong> ${ride.time}</p>
+                    <p><strong>Price:</strong> ₹${ride.price}</p>
+                    <p><strong>Contact:</strong> ${ride.phonenumber}</p>
+                    <button class="unbook-btn" onclick="unbookRide('${rideId}')">Unbook</button>
+                `;
+
+                bookedRidesList.appendChild(rideElement);
+            });
+        }
+
+        function unbookRide(rideId) {
+            let bookings = JSON.parse(localStorage.getItem("userBookings")) || {};
+            delete bookings[rideId]; // Remove booking
+            localStorage.setItem("userBookings", JSON.stringify(bookings));
+
+            // Reload booked rides
+            loadBookedRides();
+        }
+
+        function getRideId(ride) {
+            return `${ride.riderName}-${ride.pickup}-${ride.destination}-${ride.date}-${ride.time}`;
+        }
+
+        // Load booked rides when page opens
+        window.onload = loadBookedRides;
+    </script>
+
+</body>
+</html>

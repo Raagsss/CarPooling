@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create a Ride</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .container { max-width: 500px; margin: 50px auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; }
+        input, button { width: 90%; padding: 10px; margin: 10px 0; }
+
+        .container { 
+            max-width: 700px; 
+            margin: 50px auto; 
+            padding: 20px; 
+            background: white; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+        }
+
+        input, button { 
+            width: 90%; 
+            padding: 10px; 
+            margin: 10px 0; 
+            border: 1px solid #ddd; 
+            border-radius: 5px; 
+            font-size: 16px;
+        }
+
+        button {
+            background: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007BFF;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body style="height: 950px;background: url(/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvdjk2MC1uaW5nLTMwLmpwZw.webp) no-repeat center center/cover;">
+
+    <header>
+        <a href="landing.html" style="text-decoration: none;">
+            <div class="logo">🚗</div>
+        </a>
+        <div class="profile-section">
+            <img src="dragon-ball-goku-sparks-gif-cover-desktop-wallpaper.gif" alt="Profile" class="profile-icon">
+            <button class="btn btn-secondary" onclick="logout()">Logout</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2>Create a Ride</h2>
+        <input type="text" id="ridername" placeholder="Your Name" required>
+        <input type="text" id="pickup" placeholder="Pickup Location" required>
+        <input type="text" id="destination" placeholder="Drop-off Location" required>
+        <input type="date" id="date" required>
+        <input type="time" id="time" required>
+        <input type="number" id="seats" placeholder="Available Seats" min="1" required>
+        <input type="text" id="price" placeholder="Price (₹)" required>
+        <input type="text" id="phone" placeholder="Phone Number" required>
+        <div style="display: flex; justify-content: center; gap: 5px; margin-top: 10px;">
+            <button onclick="createRide()" style="padding: 10px 10px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease; margin-left: 25px;"
+                onmouseover="this.style.backgroundColor='#218838'"
+                onmouseout="this.style.backgroundColor='#28a745'">
+                Create Ride
+            </button>
+        
+            <a href="find_ride.html" style="text-decoration: none;">
+                <button style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease;margin-right: 155px;"
+                    onmouseover="this.style.backgroundColor='#0056b3'"
+                    onmouseout="this.style.backgroundColor='#007bff'">
+                    Find a Ride
+                </button>
+            </a>
+        </div>        
+    </div>
+
+    <script>
+        function createRide() {
+            let loggedInUser = localStorage.getItem("loggedInUser") || "guest";
+            let allRides = JSON.parse(localStorage.getItem("allRides")) || {};
+
+            let newRide = {
+                riderName: document.getElementById("ridername").value.trim(),  // ✅ Fixed this line
+                pickup: document.getElementById("pickup").value.trim(),
+                destination: document.getElementById("destination").value.trim(),
+                date: document.getElementById("date").value,
+                time: document.getElementById("time").value,
+                seats: parseInt(document.getElementById("seats").value),
+                price: document.getElementById("price").value,
+                phonenumber: document.getElementById("phone").value
+            };
+
+            if (!newRide.riderName) {
+                alert("❌ Please enter your name.");
+                return;
+            }
+
+            if (!allRides[loggedInUser]) {
+                allRides[loggedInUser] = [];
+            }
+
+            allRides[loggedInUser].push(newRide);
+            localStorage.setItem("allRides", JSON.stringify(allRides));
+
+            alert("✅ Ride created successfully!");
+        }
+    </script>
+
+</body>
+</html>

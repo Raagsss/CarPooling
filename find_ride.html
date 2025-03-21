@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find a Ride</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        
+        input, button { width: 90%; padding: 10px; margin: 10px 0; }
+        .ride { border-bottom: 1px solid #ddd; padding: 10px; text-align: left; }
+        .book-btn, .unbook-btn { width: auto; margin-right: 10px; }
+
+        h2, h3 {
+            color: #333;
+        }
+
+        .container1 {
+            width: 90%;
+            max-width: 600px;
+            background: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-top: 140px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            padding: 30px;
+        }
+
+        input {
+            width: 95%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 95%;
+            padding: 12px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Ride Cards */
+        .ride {
+            background: #ffffff;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.08);
+            text-align: left;
+        }
+
+        .ride p {
+            margin: 5px 0;
+            font-size: 15px;
+            color: #555;
+        }
+
+        .ride strong {
+            color: #222;
+        }
+
+        /* Buttons */
+        .book-btn, .unbook-btn {
+            padding: 10px 16px;
+            font-size: 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .book-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+        }
+
+        .book-btn:hover {
+            background-color: #218838;
+        }
+
+        .unbook-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+        }
+
+        .unbook-btn:hover {
+            background-color: #c82333;
+        }
+
+        .divider {
+            margin: 30px 0;
+            border-bottom: 2px dashed #ddd;
+        }
+
+        .back-btn {
+            background-color: #6c757d;
+            width: auto;
+            padding: 8px 15px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        .back-btn:hover {
+            background-color: #5a6268;
+        }
+
+        /* Booked Tag */
+        .booked-text {
+            display: inline-block;
+            padding: 6px 10px;
+            font-size: 14px;
+            color: #155724;
+            background-color: #d4edda;
+            border-radius: 5px;
+        }
+
+    </style>
+</head>
+<body style="background: url(/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvdjk2MC1uaW5nLTMwLmpwZw.webp) no-repeat center center/cover;">
+
+    <header>
+        <a href="landing.html" style="text-decoration: none;">
+            <div class="logo">🚗</div>
+        </a>
+        <div class="profile-section">
+            <img src="dragon-ball-goku-sparks-gif-cover-desktop-wallpaper.gif" alt="Profile" class="profile-icon">
+            <button class="btn btn-secondary" onclick="logout()">Logout</button>
+        </div>
+    </header>
+
+    <div class="container1">
+        <h2>Find a Ride</h2>
+        <input type="text" id="searchPickup" placeholder="Pickup Location">
+        <input type="text" id="searchDestination" placeholder="Drop-off Location">
+        <button onclick="searchRides()">Search</button>
+
+        <div class="divider"></div>
+
+        <h2>Available Rides</h2>
+        <div id="ridesList"></div>
+    </div>
+
+    <script>
+        // Simplified approach to directly manipulate the rides
+        function loadRides() {
+            // Get all ride data
+            let allRidesData = JSON.parse(localStorage.getItem("allRides")) || {};
+            
+            // Get user booked rides (with simplified structure)
+            let bookings = JSON.parse(localStorage.getItem("userBookings")) || {};
+            
+            // Convert rides to array format
+            let allRides = [];
+            Object.values(allRidesData).forEach(userRides => {
+                allRides = allRides.concat(userRides);
+            });
+
+            // Apply booking status to each ride
+            allRides.forEach(ride => {
+                const rideId = getRideId(ride);
+                if (bookings[rideId]) {
+                    ride.isBooked = true;
+                    ride.originalSeats = ride.originalSeats || ride.seats + 1;
+                    ride.seats = ride.seats > 0 ? ride.seats : 0; // Ensure seats aren't negative
+                } else {
+                    ride.isBooked = false;
+                }
+            });
+
+            displayRides(allRides);
+        }
+
+        function displayRides(rides) {
+            const ridesList = document.getElementById("ridesList");
+            ridesList.innerHTML = "";
+
+            if (rides.length === 0) {
+                ridesList.innerHTML = "<p>No rides available.</p>";
+                return;
+            }
+
+            // Get the bookings
+            const bookings = JSON.parse(localStorage.getItem("userBookings")) || {};
+
+            rides.forEach((ride, index) => {
+                const rideId = getRideId(ride);
+                const isBooked = bookings[rideId] === true;
+                
+                const rideElement = document.createElement("div");
+                rideElement.className = "ride";
+                rideElement.dataset.rideId = rideId;
+
+                rideElement.innerHTML = `
+                    <p><strong>Rider:</strong> ${ride.riderName}</p>
+                    <p><strong>Pickup:</strong> ${ride.pickup}</p>
+                    <p><strong>Destination:</strong> ${ride.destination}</p>
+                    <p><strong>Date:</strong> ${ride.date}</p>
+                    <p><strong>Time:</strong> ${ride.time}</p>
+                    <p><strong>Seats Available:</strong> <span id="seats-${index}">${ride.seats}</span></p>
+                    <p><strong>Price:</strong> ₹${ride.price}</p>
+                    <p><strong>Contact:</strong> ${ride.phonenumber}</p>
+                    <button class="book-btn" id="bookBtn-${index}" onclick="bookRide('${rideId}', ${index})" ${isBooked || ride.seats === 0 ? "style='display:none;'" : ""}>Book</button>
+                    <button class="unbook-btn" id="unbookBtn-${index}" onclick="unbookRide('${rideId}', ${index})" ${isBooked ? "" : "style='display:none;'"}>Unbook</button>
+                    <span id="bookedText-${index}" ${isBooked ? "" : "style='display:none;'"}><strong>✅ Booked</strong></span>
+                `;
+
+                ridesList.appendChild(rideElement);
+            });
+
+            // Save displayed rides for reference
+            localStorage.setItem("displayedRides", JSON.stringify(rides));
+        }
+
+        function bookRide(rideId, index) {
+            // Get the current displayed rides
+            let displayedRides = JSON.parse(localStorage.getItem("displayedRides")) || [];
+            let ride = displayedRides[index];
+            
+            if (!ride || ride.seats <= 0) return;
+            
+            // Save original seats count if not saved
+            if (!ride.originalSeats) {
+                ride.originalSeats = ride.seats;
+            }
+            
+            // Update the seat count
+            ride.seats--;
+            
+            // Get current bookings and update
+            let bookings = JSON.parse(localStorage.getItem("userBookings")) || {};
+            bookings[rideId] = true;
+            localStorage.setItem("userBookings", JSON.stringify(bookings));
+            
+            // Update the displayed rides
+            localStorage.setItem("displayedRides", JSON.stringify(displayedRides));
+            
+            // Update the UI
+            document.getElementById(`seats-${index}`).textContent = ride.seats;
+            document.getElementById(`bookBtn-${index}`).style.display = "none";
+            document.getElementById(`unbookBtn-${index}`).style.display = "inline-block";
+            document.getElementById(`bookedText-${index}`).style.display = "inline-block";
+            
+            // Update the original ride data
+            updateOriginalRideData(rideId, ride.seats, true, ride.originalSeats);
+            
+            // ADDED: Store the ride in bookedRides array for Booked Rides page
+            let bookedRides = JSON.parse(localStorage.getItem("bookedRides")) || [];
+            bookedRides.push({...ride, seats: 1}); // Store with seats=1 to indicate one seat booked
+            localStorage.setItem("bookedRides", JSON.stringify(bookedRides));
+        }
+
+        function unbookRide(rideId, index) {
+            // Get the current displayed rides
+            let displayedRides = JSON.parse(localStorage.getItem("displayedRides")) || [];
+            let ride = displayedRides[index];
+            
+            if (!ride) return;
+            
+            // Increase the seat count
+            ride.seats++;
+            
+            // Update the bookings
+            let bookings = JSON.parse(localStorage.getItem("userBookings")) || {};
+            delete bookings[rideId]; // Remove this booking
+            localStorage.setItem("userBookings", JSON.stringify(bookings));
+            
+            // Update the displayed rides
+            localStorage.setItem("displayedRides", JSON.stringify(displayedRides));
+            
+            // Update the UI
+            document.getElementById(`seats-${index}`).textContent = ride.seats;
+            document.getElementById(`bookBtn-${index}`).style.display = "inline-block";
+            document.getElementById(`unbookBtn-${index}`).style.display = "none";
+            document.getElementById(`bookedText-${index}`).style.display = "none";
+            
+            // Update the original ride data
+            updateOriginalRideData(rideId, ride.seats, false, ride.originalSeats);
+            
+            // ADDED: Remove the ride from bookedRides array
+            removeFromBookedRides(rideId);
+        }
+
+        // ADDED: New function to remove a ride from bookedRides by rideId
+        function removeFromBookedRides(rideId) {
+            let bookedRides = JSON.parse(localStorage.getItem("bookedRides")) || [];
+            let newBookedRides = bookedRides.filter(ride => {
+                let currentRideId = getRideId(ride);
+                return currentRideId !== rideId;
+            });
+            localStorage.setItem("bookedRides", JSON.stringify(newBookedRides));
+        }
+
+        function updateOriginalRideData(rideId, seats, isBooked, originalSeats) {
+            let allRidesData = JSON.parse(localStorage.getItem("allRides")) || {};
+            let updated = false;
+            
+            // Find and update the ride in the original data
+            for (const userId in allRidesData) {
+                for (let i = 0; i < allRidesData[userId].length; i++) {
+                    let currentRide = allRidesData[userId][i];
+                    let currentRideId = getRideId(currentRide);
+                    
+                    if (currentRideId === rideId) {
+                        allRidesData[userId][i].seats = seats;
+                        allRidesData[userId][i].isBooked = isBooked;
+                        allRidesData[userId][i].originalSeats = originalSeats;
+                        updated = true;
+                        break;
+                    }
+                }
+                if (updated) break;
+            }
+            
+            // Save the updated data
+            if (updated) {
+                localStorage.setItem("allRides", JSON.stringify(allRidesData));
+            }
+        }
+
+        function getRideId(ride) {
+            return `${ride.riderName}-${ride.pickup}-${ride.destination}-${ride.date}-${ride.time}`;
+        }
+
+        function searchRides() {
+            let pickup = document.getElementById("searchPickup").value.trim().toLowerCase();
+            let destination = document.getElementById("searchDestination").value.trim().toLowerCase();
+            let allRidesData = JSON.parse(localStorage.getItem("allRides")) || {};
+            let bookings = JSON.parse(localStorage.getItem("userBookings")) || {};
+            
+            let allRides = [];
+            Object.values(allRidesData).forEach(userRides => {
+                allRides = allRides.concat(userRides);
+            });
+
+            // Apply booking status to each ride
+            allRides.forEach(ride => {
+                const rideId = getRideId(ride);
+                if (bookings[rideId]) {
+                    ride.isBooked = true;
+                }
+            });
+
+            // Filter rides based on search criteria
+            let filteredRides = allRides.filter(ride =>
+                (pickup === "" || ride.pickup.toLowerCase().includes(pickup)) &&
+                (destination === "" || ride.destination.toLowerCase().includes(destination))
+            );
+
+            displayRides(filteredRides);
+        }
+
+        // Load rides when page loads
+        window.onload = loadRides;
+    </script>
+
+</body>
+</html>
