@@ -31,5 +31,4 @@ Admin Panel for system monitoring and ride moderation.
 📂 Repository contains:
 Source code for UI and authentication.
 Scripts for ride-matching algorithms.
-Demo video and project documentation.
-🔗 Live Demo & Documentation: [https://www.loom.com/share/548b5ba1d86b4b04849bfaa885948757?sid=f62c089c-0163-4bac-8409-d48504ed64a2]
+Source code of full project
