@@ -1,4 +1,4 @@
-                                                                                          🚗 Carpooling System
+Carpool 🚗
 
 About the Project
 The Carpooling System is a web-based platform that connects users who want to share rides. It enables passengers to find available rides and drivers to offer their seats, promoting cost-effective and eco-friendly travel.
