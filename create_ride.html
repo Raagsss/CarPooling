@@ -3,124 +3,502 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create a Ride</title>
+    <title>Create a Ride - CarPool</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; }
-        .container { max-width: 500px; margin: 50px auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; }
-        input, button { width: 90%; padding: 10px; margin: 10px 0; }
+        /* Google Font */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-        .container { 
-            max-width: 700px; 
-            margin: 50px auto; 
-            padding: 20px; 
-            background: white; 
-            border-radius: 10px; 
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
         }
 
-        input, button { 
-            width: 90%; 
-            padding: 10px; 
-            margin: 10px 0; 
-            border: 1px solid #ddd; 
-            border-radius: 5px; 
-            font-size: 16px;
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+            padding-top: 80px;
+            position: relative;
+            overflow-x: hidden;
         }
 
-        button {
-            background: #007BFF;
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: 0.3s;
+        /* Animated Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><rect width="1" height="1" fill="rgba(255,255,255,0.05)"/></svg>');
+            opacity: 0.1;
+            z-index: -1;
+            animation: backgroundMove 20s linear infinite;
         }
 
-        button:hover {
-            background: #0056b3;
+        @keyframes backgroundMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 100% 100%; }
         }
 
-        a {
+        /* Header Styling */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            position: fixed;
+            width: 94%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            margin: 1rem auto;
+        }
+
+        .header-content {
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #2c3e50;
             text-decoration: none;
-            color: #007BFF;
-            font-weight: bold;
+            transition: transform 0.3s ease;
         }
 
-        a:hover {
-            text-decoration: underline;
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .profile-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #2c3e50;
+            transition: transform 0.3s ease;
+        }
+
+        .profile-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .user-name {
+            color: #2c3e50;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+            animation: fadeInUp 0.8s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(44, 62, 80, 0.1);
+        }
+
+        .container h2 {
+            color: #2c3e50;
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .container h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, #2c3e50, #34495e);
+            border-radius: 3px;
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid rgba(44, 62, 80, 0.1);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            border-color: #2c3e50;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.1);
+        }
+
+        .form-group i {
+            position: absolute;
+            right: 15px;
+            top: 38px;
+            color: #2c3e50;
+            opacity: 0.5;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 150px;
+            justify-content: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(145deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(44, 62, 80, 0.1);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(44, 62, 80, 0.2);
+        }
+
+        .btn-danger {
+            background: linear-gradient(145deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.1);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.2);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Form Field Animations */
+        .form-group {
+            animation: slideIn 0.5s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
+        .form-group:nth-child(4) { animation-delay: 0.4s; }
+        .form-group:nth-child(5) { animation-delay: 0.5s; }
+        .form-group:nth-child(6) { animation-delay: 0.6s; }
+        .form-group:nth-child(7) { animation-delay: 0.7s; }
+        .form-group:nth-child(8) { animation-delay: 0.8s; }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem;
+                width: 100%;
+                margin: 0;
+                border-radius: 0;
+            }
+
+            .header-content {
+                width: 100%;
+                padding: 0 1rem;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .container {
+                width: 95%;
+                padding: 30px 20px;
+                margin-top: 20px;
+            }
+
+            .container h2 {
+                font-size: 1.8rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
-<body style="height: 950px;background: url(/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvdjk2MC1uaW5nLTMwLmpwZw.webp) no-repeat center center/cover;">
-
+<body>
+    <!-- Header -->
     <header>
-        <a href="landing.html" style="text-decoration: none;">
-            <div class="logo">🚗</div>
-        </a>
-        <div class="profile-section">
-            <img src="dragon-ball-goku-sparks-gif-cover-desktop-wallpaper.gif" alt="Profile" class="profile-icon">
-            <button class="btn btn-secondary" onclick="logout()">Logout</button>
+        <div class="header-content">
+            <a href="landing.html" class="logo">
+                <i class="fas fa-car"></i>
+                CarPool
+            </a>
+            <div class="profile-section">
+                <img src="dragon-ball-goku-sparks-gif-cover-desktop-wallpaper.gif" alt="Profile" class="profile-icon">
+                <span class="user-name" id="userName"></span>
+                <button class="btn btn-secondary" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
         </div>
     </header>
 
+    <!-- Main Content -->
     <div class="container">
-        <h2>Create a Ride</h2>
-        <input type="text" id="ridername" placeholder="Your Name" required>
-        <input type="text" id="pickup" placeholder="Pickup Location" required>
-        <input type="text" id="destination" placeholder="Drop-off Location" required>
-        <input type="date" id="date" required>
-        <input type="time" id="time" required>
-        <input type="number" id="seats" placeholder="Available Seats" min="1" required>
-        <input type="text" id="price" placeholder="Price (₹)" required>
-        <input type="text" id="phone" placeholder="Phone Number" required>
-        <div style="display: flex; justify-content: center; gap: 5px; margin-top: 10px;">
-            <button onclick="createRide()" style="padding: 10px 10px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease; margin-left: 25px;"
-                onmouseover="this.style.backgroundColor='#218838'"
-                onmouseout="this.style.backgroundColor='#28a745'">
-                Create Ride
+        <h2><i class="fas fa-plus-circle"></i> Create a Ride</h2>
+        <div class="form-group">
+            <label for="ridername">Your Name</label>
+            <input type="text" id="ridername" placeholder="Enter your name" required>
+            <i class="fas fa-user"></i>
+        </div>
+        <div class="form-group">
+            <label for="pickup">Pickup Location</label>
+            <input type="text" id="pickup" placeholder="Enter pickup location" required>
+            <i class="fas fa-map-marker-alt"></i>
+        </div>
+        <div class="form-group">
+            <label for="destination">Drop-off Location</label>
+            <input type="text" id="destination" placeholder="Enter drop-off location" required>
+            <i class="fas fa-map-marker"></i>
+        </div>
+        <div class="form-group">
+            <label for="date">Date</label>
+            <input type="date" id="date" required>
+            <i class="fas fa-calendar"></i>
+        </div>
+        <div class="form-group">
+            <label for="time">Time</label>
+            <input type="time" id="time" required>
+            <i class="fas fa-clock"></i>
+        </div>
+        <div class="form-group">
+            <label for="seats">Available Seats</label>
+            <input type="number" id="seats" placeholder="Enter number of seats" min="1" required>
+            <i class="fas fa-chair"></i>
+        </div>
+        <div class="form-group">
+            <label for="price">Price (₹)</label>
+            <input type="text" id="price" placeholder="Enter price per seat" required>
+            <i class="fas fa-rupee-sign"></i>
+        </div>
+        <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="text" id="phone" placeholder="Enter your phone number" required>
+            <i class="fas fa-phone"></i>
+        </div>
+        <div class="button-group">
+            <button class="btn btn-primary" onclick="createRide()">
+                <i class="fas fa-plus"></i> Create Ride
             </button>
-        
             <a href="find_ride.html" style="text-decoration: none;">
-                <button style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease;margin-right: 155px;"
-                    onmouseover="this.style.backgroundColor='#0056b3'"
-                    onmouseout="this.style.backgroundColor='#007bff'">
-                    Find a Ride
+                <button class="btn btn-secondary">
+                    <i class="fas fa-search"></i> Find a Ride
                 </button>
             </a>
-        </div>        
+        </div>
     </div>
 
-    <script>
-        function createRide() {
-            let loggedInUser = localStorage.getItem("loggedInUser") || "guest";
-            let allRides = JSON.parse(localStorage.getItem("allRides")) || {};
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <!-- Firebase Config -->
+    <script src="script.js"></script>
 
-            let newRide = {
-                riderName: document.getElementById("ridername").value.trim(),  // ✅ Fixed this line
+    <script>
+        // Check authentication
+        function checkAuth() {
+            const currentUser = auth.currentUser;
+            if (!currentUser) {
+                window.location.replace('index.html');
+                return;
+            }
+
+            // Display user name
+            database.ref(`users/${currentUser.uid}`).once('value')
+                .then((snapshot) => {
+                    const userData = snapshot.val();
+                    if (userData && userData.name) {
+                        document.getElementById('userName').textContent = `Welcome, ${userData.name}!`;
+                    } else {
+                        document.getElementById('userName').textContent = 'Welcome!';
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error fetching user data:', error);
+                    document.getElementById('userName').textContent = 'Welcome!';
+                });
+        }
+
+        // Logout function
+        function logout() {
+            auth.signOut().then(() => {
+                window.location.replace('index.html');
+            }).catch((error) => {
+                console.error('Error signing out:', error);
+            });
+        }
+
+        function createRide() {
+            const currentUser = auth.currentUser;
+            if (!currentUser) {
+                alert("Please log in to create a ride.");
+                window.location.replace('index.html');
+                return;
+            }
+
+            const newRide = {
+                riderName: document.getElementById("ridername").value.trim(),
                 pickup: document.getElementById("pickup").value.trim(),
                 destination: document.getElementById("destination").value.trim(),
                 date: document.getElementById("date").value,
                 time: document.getElementById("time").value,
                 seats: parseInt(document.getElementById("seats").value),
                 price: document.getElementById("price").value,
-                phonenumber: document.getElementById("phone").value
+                phonenumber: document.getElementById("phone").value,
+                availableSeats: parseInt(document.getElementById("seats").value),
+                createdBy: currentUser.uid,
+                createdAt: new Date().toISOString(),
+                bookings: {} // Initialize empty bookings object
             };
 
+            // Validate inputs
             if (!newRide.riderName) {
                 alert("❌ Please enter your name.");
                 return;
             }
 
-            if (!allRides[loggedInUser]) {
-                allRides[loggedInUser] = [];
+            if (!newRide.pickup || !newRide.destination) {
+                alert("❌ Please enter both pickup and destination locations.");
+                return;
             }
 
-            allRides[loggedInUser].push(newRide);
-            localStorage.setItem("allRides", JSON.stringify(allRides));
+            if (!newRide.date || !newRide.time) {
+                alert("❌ Please select both date and time.");
+                return;
+            }
 
-            alert("✅ Ride created successfully!");
+            if (newRide.seats <= 0) {
+                alert("❌ Please enter a valid number of seats.");
+                return;
+            }
+
+            if (!newRide.price) {
+                alert("❌ Please enter the price per seat.");
+                return;
+            }
+
+            if (!newRide.phonenumber) {
+                alert("❌ Please enter your phone number.");
+                return;
+            }
+
+            // Show loading state
+            const createButton = document.querySelector('.btn-primary');
+            createButton.disabled = true;
+            createButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Ride...';
+
+            // Save to Firebase
+            const ridesRef = database.ref('rides');
+            ridesRef.push(newRide)
+                .then(() => {
+                    alert("✅ Ride created successfully!");
+                    window.location.replace("find_ride.html"); // Redirect to find rides page to see the created ride
+                })
+                .catch((error) => {
+                    console.error('Error creating ride:', error);
+                    alert("❌ Error creating ride. Please try again.");
+                    createButton.disabled = false;
+                    createButton.innerHTML = '<i class="fas fa-plus"></i> Create Ride';
+                });
         }
-    </script>
 
+        // Listen for auth state changes
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                // User is signed in
+                checkAuth();
+            } else {
+                // User is signed out
+                window.location.replace('index.html');
+            }
+        });
+    </script>
 </body>
 </html>

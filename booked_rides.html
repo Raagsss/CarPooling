@@ -3,163 +3,580 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Booked Rides</title>
+    <title>My Booked Rides - CarPool</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        .ride { border-bottom: 1px solid #ddd; padding: 10px; text-align: left; }
-        .unbook-btn { width: auto; margin-top: 10px; }
+        /* Google Font */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-        /* Heading */
-        h2 {
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+            padding-top: 80px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Header Styling */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            position: fixed;
+            width: 94%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            margin: 1rem auto;
+        }
+
+        .header-content {
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
             color: #2c3e50;
-            font-size: 24px;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .profile-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #2c3e50;
+            transition: transform 0.3s ease;
+        }
+
+        .profile-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .user-name {
+            color: #2c3e50;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+            animation: fadeInUp 0.8s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(44, 62, 80, 0.1);
+        }
+
+        .container h2 {
+            color: #2c3e50;
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .container h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, #2c3e50, #34495e);
+            border-radius: 3px;
+        }
+
+        /* Ride Cards */
+        .ride {
+            background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(44, 62, 80, 0.1);
+            animation: slideIn 0.5s ease forwards;
+            opacity: 0;
+        }
+
+        .ride:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(44, 62, 80, 0.1);
+            border-color: rgba(44, 62, 80, 0.2);
+        }
+
+        .ride-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(44, 62, 80, 0.1);
+        }
+
+        .rider-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .rider-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #2c3e50 0%, #34495e 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(44, 62, 80, 0.1);
+        }
+
+        .rider-name {
+            font-size: 1.2rem;
             font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .ride-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .detail-item i {
+            color: #2c3e50;
+            font-size: 1.2rem;
+            background: rgba(44, 62, 80, 0.1);
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .detail-item p {
+            color: #444;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .ride-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid rgba(44, 62, 80, 0.1);
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 150px;
+            justify-content: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(145deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(44, 62, 80, 0.1);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(44, 62, 80, 0.2);
+        }
+
+        .btn-danger {
+            background: linear-gradient(145deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.1);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.2);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            color: #2c3e50;
+            font-size: 1.5rem;
             margin-bottom: 10px;
         }
 
-        /* Back Button */
-        button {
-            background: #007bff;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: 0.3s ease-in-out;
+        .empty-state p {
+            color: #666;
+            margin-bottom: 20px;
         }
 
-        button:hover {
-            background: #0056b3;
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        /* Ride List Styling */
-        .ride {
-            background: #f9f9f9;
-            padding: 15px;
-            margin: 15px 0;
-            border-left: 5px solid #007bff;
-            border-radius: 8px;
-            text-align: left;
-            box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
-        .ride p {
-            margin: 5px 0;
-            font-size: 16px;
-            color: #555;
-        }
-
-        /* Unbook Button */
-        .unbook-btn {
-            background: #e74c3c;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            font-size: 14px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: 0.3s ease-in-out;
-        }
-
-        .unbook-btn:hover {
-            background: #c0392b;
-        }
+        .ride:nth-child(1) { animation-delay: 0.1s; }
+        .ride:nth-child(2) { animation-delay: 0.2s; }
+        .ride:nth-child(3) { animation-delay: 0.3s; }
+        .ride:nth-child(4) { animation-delay: 0.4s; }
+        .ride:nth-child(5) { animation-delay: 0.5s; }
 
         /* Responsive Design */
         @media (max-width: 768px) {
-            .container {
-                width: 90%;
-                padding: 20px;
+            header {
+                padding: 1rem;
             }
 
-            .ride {
-                padding: 10px;
+            .header-content {
+                width: 100%;
+                padding: 0 1rem;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .container {
+                width: 95%;
+                padding: 30px 20px;
+                margin-top: 20px;
+            }
+
+            .container h2 {
+                font-size: 1.8rem;
+            }
+
+            .ride-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
             }
         }
-
     </style>
 </head>
-<body style="height: 1000px;background: url(/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvdjk2MC1uaW5nLTMwLmpwZw.webp) no-repeat center center/cover;">
-
+<body>
+    <!-- Header -->
     <header>
-        <a href="landing.html" style="text-decoration: none;">
-            <div class="logo">🚗</div>
-        </a>
-        <div class="profile-section">
-            <img src="dragon-ball-goku-sparks-gif-cover-desktop-wallpaper.gif" alt="Profile" class="profile-icon">
-            <button class="btn btn-secondary" onclick="logout()">Logout</button>
+        <div class="header-content">
+            <a href="landing.html" class="logo">
+                <i class="fas fa-car"></i>
+                CarPool
+            </a>
+            <div class="profile-section">
+                <img src="dragon-ball-goku-sparks-gif-cover-desktop-wallpaper.gif" alt="Profile" class="profile-icon">
+                <span class="user-name" id="userName"></span>
+                <button class="btn btn-danger" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
         </div>
     </header>
 
+    <!-- Main Content -->
     <div class="container">
-        <h2>Booked Rides</h2>
+        <h2><i class="fas fa-calendar-check"></i> My Booked Rides</h2>
         <div id="bookedRidesList"></div>
-        
-        <button onclick="window.location.href='find_ride.html'">Back to Find Rides</button>
     </div>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <!-- Firebase Config -->
+    <script src="script.js"></script>
 
     <script>
-        function loadBookedRides() {
-            let allRidesData = JSON.parse(localStorage.getItem("allRides")) || {};
-            let bookings = JSON.parse(localStorage.getItem("userBookings")) || {};
-            let bookedRides = [];
+        // Check authentication
+        function checkAuth() {
+            const currentUser = auth.currentUser;
+            if (!currentUser) {
+                window.location.replace('index.html');
+                return;
+            }
 
-            // Convert all rides to array and filter booked ones
-            Object.values(allRidesData).forEach(userRides => {
-                bookedRides = bookedRides.concat(userRides.filter(ride => bookings[getRideId(ride)]));
-            });
-
-            displayBookedRides(bookedRides);
+            // Display user name
+            database.ref(`users/${currentUser.uid}`).once('value')
+                .then((snapshot) => {
+                    const userData = snapshot.val();
+                    if (userData && userData.name) {
+                        document.getElementById('userName').textContent = `Welcome, ${userData.name}!`;
+                    } else {
+                        document.getElementById('userName').textContent = 'Welcome!';
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error fetching user data:', error);
+                    document.getElementById('userName').textContent = 'Welcome!';
+                });
         }
 
+        // Logout function
+        function logout() {
+            auth.signOut().then(() => {
+                window.location.replace('index.html');
+            }).catch((error) => {
+                console.error('Error signing out:', error);
+            });
+        }
+
+        // Load user's booked rides
+        function loadUserBookedRides() {
+            const currentUser = auth.currentUser;
+            if (!currentUser) return;
+
+            const userBookingsRef = database.ref(`users/${currentUser.uid}/bookings`);
+            userBookingsRef.once('value')
+                .then((snapshot) => {
+                    const bookedRides = [];
+                    snapshot.forEach((childSnapshot) => {
+                        bookedRides.push({
+                            id: childSnapshot.key,
+                            ...childSnapshot.val()
+                        });
+                    });
+                    displayBookedRides(bookedRides);
+                })
+                .catch((error) => {
+                    console.error('Error loading booked rides:', error);
+                    alert('Error loading booked rides. Please try again.');
+                });
+        }
+
+        // Display booked rides
         function displayBookedRides(bookedRides) {
             const bookedRidesList = document.getElementById("bookedRidesList");
             bookedRidesList.innerHTML = "";
 
             if (bookedRides.length === 0) {
-                bookedRidesList.innerHTML = "<p>No booked rides found.</p>";
+                bookedRidesList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-calendar-times"></i>
+                        <h3>No Booked Rides</h3>
+                        <p>You haven't booked any rides yet.</p>
+                        <button class="btn btn-primary" onclick="window.location.href='find_ride.html'">
+                            <i class="fas fa-search"></i> Find a Ride
+                        </button>
+                    </div>
+                `;
                 return;
             }
 
-            bookedRides.forEach((ride, index) => {
-                const rideId = getRideId(ride);
-                
+            bookedRides.forEach((booking) => {
+                const ride = booking.rideDetails;
                 const rideElement = document.createElement("div");
                 rideElement.className = "ride";
-
                 rideElement.innerHTML = `
-                    <p><strong>Rider:</strong> ${ride.riderName}</p>
-                    <p><strong>Pickup:</strong> ${ride.pickup}</p>
-                    <p><strong>Destination:</strong> ${ride.destination}</p>
-                    <p><strong>Date:</strong> ${ride.date}</p>
-                    <p><strong>Time:</strong> ${ride.time}</p>
-                    <p><strong>Price:</strong> ₹${ride.price}</p>
-                    <p><strong>Contact:</strong> ${ride.phonenumber}</p>
-                    <button class="unbook-btn" onclick="unbookRide('${rideId}')">Unbook</button>
+                    <div class="ride-header">
+                        <div class="rider-info">
+                            <div class="rider-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="rider-name">${ride.riderName}</div>
+                        </div>
+                        <div class="ride-price">
+                            <i class="fas fa-rupee-sign"></i>
+                            <span>${ride.price}</span>
+                        </div>
+                    </div>
+                    <div class="ride-details">
+                        <div class="detail-item">
+                            <i class="fas fa-calendar"></i>
+                            <p>${ride.date}</p>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-clock"></i>
+                            <p>${ride.time}</p>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <p><strong>Pickup:</strong> ${ride.pickup}</p>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-map-marker"></i>
+                            <p><strong>Destination:</strong> ${ride.destination}</p>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-chair"></i>
+                            <p><strong>Available Seats:</strong> ${ride.availableSeats}</p>
+                        </div>
+                    </div>
+                    <div class="ride-actions">
+                        <button class="btn btn-danger" onclick="unbookRide('${booking.id}')">
+                            <i class="fas fa-times"></i> Unbook Ride
+                        </button>
+                        <button class="btn btn-primary" onclick="contactRider('${ride.phonenumber}')">
+                            <i class="fas fa-phone"></i> Contact
+                        </button>
+                        <button class="btn btn-primary" onclick="getDirections('${ride.pickup}', '${ride.destination}')">
+                            <i class="fas fa-map-marked-alt"></i> Directions
+                        </button>
+                    </div>
                 `;
-
                 bookedRidesList.appendChild(rideElement);
             });
         }
 
+        function contactRider(phoneNumber) {
+            window.location.href = `tel:${phoneNumber}`;
+        }
+
+        function getDirections(pickup, destination) {
+           
+            const encodedPickup = encodeURIComponent(pickup);
+            const encodedDestination = encodeURIComponent(destination);
+
+            const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodedPickup}&destination=${encodedDestination}`;
+            window.open(mapsUrl, '_blank');
+        }
+
         function unbookRide(rideId) {
-            let bookings = JSON.parse(localStorage.getItem("userBookings")) || {};
-            delete bookings[rideId]; // Remove booking
-            localStorage.setItem("userBookings", JSON.stringify(bookings));
+            if (!confirm('Are you sure you want to unbook this ride?')) {
+                return;
+            }
 
-            // Reload booked rides
-            loadBookedRides();
+            const currentUser = auth.currentUser;
+            if (!currentUser) return;
+
+            const rideRef = database.ref(`rides/${rideId}`);
+            const userBookingRef = database.ref(`users/${currentUser.uid}/bookings/${rideId}`);
+
+            // Get current ride data
+            rideRef.once('value')
+                .then((snapshot) => {
+                    const rideData = snapshot.val();
+                    if (!rideData) {
+                        throw new Error('Ride not found');
+                    }
+
+                    // Update available seats and remove booking
+                    const updates = {
+                        availableSeats: rideData.availableSeats + 1,
+                        [`bookings/${currentUser.uid}`]: null
+                    };
+
+                    // Update ride and remove booking
+                    return Promise.all([
+                        rideRef.update(updates),
+                        userBookingRef.remove()
+                    ]);
+                })
+                .then(() => {
+                    alert('Ride unbooked successfully!');
+                    loadUserBookedRides(); // Refresh the list
+                })
+                .catch((error) => {
+                    console.error('Error unbooking ride:', error);
+                    alert('Error unbooking ride. Please try again.');
+                });
         }
 
-        function getRideId(ride) {
-            return `${ride.riderName}-${ride.pickup}-${ride.destination}-${ride.date}-${ride.time}`;
-        }
-
-        // Load booked rides when page opens
-        window.onload = loadBookedRides;
+        // Listen for auth state changes
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                // User is signed in
+                checkAuth();
+                loadUserBookedRides(); // Load booked rides
+            } else {
+                // User is signed out
+                window.location.replace('index.html');
+            }
+        });
     </script>
-
 </body>
 </html>
