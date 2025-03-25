@@ -1,6 +1,6 @@
 // Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyAUeSwvXpjTnJHXE2gFoFvp3Qx1BSn__sM",
+    apiKey: "Enter your api key",
     authDomain: "carpooling-d3b79.firebaseapp.com",
     projectId: "carpooling-d3b79",
     storageBucket: "carpooling-d3b79.firebasestorage.app",
